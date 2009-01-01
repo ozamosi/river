@@ -1,0 +1,8 @@
+River
+=====
+
+River is, so far, only a proof-of-concept client for the libsummer library. It
+is inflexible, crashy, and probably won't do what you want it to right now.
+
+The goal is to make River a flexible, stable podcast client. We're not quite
+there yet…
