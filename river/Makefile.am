@@ -17,9 +17,12 @@ bin_PROGRAMS = river
 river_SOURCES = \
 	river.c \
 	river-config.c \
-	river-config.h
+	river-config.h \
+	river-xmpp.c \
+	river-xmpp.h
 	
 river_LDADD = \
     $(RIVER_LIBS) \
 	$(GLIB_LIBS) \
+	$(LOUDMOUTH_LIBS) \
 	$(LIBSUMMER_LIBS)

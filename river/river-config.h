@@ -7,6 +7,7 @@ RiverConfig* river_load_config (void);
 RiverConfig* river_save_config (void);
 
 struct _RiverConfig {
+	gint frequency;
 	gchar *save_dir;
 	gchar *tmp_dir;
 	GList *subscriptions;

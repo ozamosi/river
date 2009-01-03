@@ -1,12 +1,7 @@
 #include "river-xmpp.h"
 #include <loudmouth/loudmouth.h>
 
-#define SERVER "talk.l.google.com"
-#define USERNAME "river"
-#define JID "river@flukkost.nu"
-#define PASSWORD "F45741"
-#define RECIPIENT "ozamosi@flukkost.nu"
-
+static gchar *recipient;
 static LmConnection *conn;
 
 static LmHandlerResult
@@ -28,23 +23,25 @@ auto_subscribe (LmMessageHandler *handler, LmConnection *connection,
 }
 
 void
-river_xmpp_init ()
+river_xmpp_init (gchar *server, gchar *username, gchar *jid, gchar *password, gchar *recipient_, gboolean ssl, gint port)
 {
+	recipient = recipient_;
 	GError *error = NULL;
-	conn = lm_connection_new (SERVER);
+	conn = lm_connection_new (server);
 
-	LmSSL *ssl = lm_ssl_new (NULL, NULL, NULL, NULL);
-	lm_connection_set_ssl (conn, ssl);
-	lm_connection_set_jid (conn, JID);
-	lm_connection_set_port (conn, 5223);
+	LmSSL *lmssl = lm_ssl_new (NULL, NULL, NULL, NULL);
+	if (ssl)
+		lm_connection_set_ssl (conn, lmssl);
+	lm_connection_set_jid (conn, jid);
+	lm_connection_set_port (conn, port);
 
 	if (!lm_connection_open_and_block (conn, &error)) {
-		g_print ("Couldn't open connection to '%s': \n%s\n", SERVER, error->message);
+		g_print ("Couldn't open connection to '%s': \n%s\n", server, error->message);
 		g_clear_error (&error);
 		return;
 	}
-	if (!lm_connection_authenticate_and_block (conn, USERNAME, PASSWORD, "River", &error)) {
-		g_print ("Couldn't authenticate with '%s' '%s': \n%s\n", USERNAME, PASSWORD, error->message);
+	if (!lm_connection_authenticate_and_block (conn, username, password, "River", &error)) {
+		g_print ("Couldn't authenticate with '%s' '%s': \n%s\n", username, password, error->message);
 		g_clear_error (&error);
 		return;
 	}
@@ -61,13 +58,13 @@ river_xmpp_init ()
 void
 river_xmpp_send (gchar *subject, gchar *message)
 {
-	LmMessage *m = lm_message_new (RECIPIENT, LM_MESSAGE_TYPE_MESSAGE);
+	LmMessage *m = lm_message_new (recipient, LM_MESSAGE_TYPE_MESSAGE);
 	lm_message_node_add_child (m->node, "subject", subject);
 	lm_message_node_add_child (m->node, "body", message);
 
 	GError *error = NULL;
 	if (!lm_connection_send (conn, m, &error)) {
-		g_print ("Error sending message to '%s': \n%s\n", RECIPIENT, error->message);
+		g_print ("Error sending message to '%s': \n%s\n", recipient, error->message);
 	}
 
 	lm_message_unref (m);

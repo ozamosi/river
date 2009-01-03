@@ -1,11 +1,14 @@
 #include "river-config.h"
 
+#include <stdlib.h>
+
 /*
  * Example configuration file:
  * 
  * <river>
  *  <save_dir>/home/username/mediafiles/</save_dir>
  *  <tmp_dir>/home/username/.cache/</tmp_dir>
+ *  <frequency>900</frequency>
  *  <subscription>
  *   <name>Awesome feed</name>
  *   <url>http://awesome.com/feed</url>
@@ -22,6 +25,7 @@ struct parse_context {
 	gboolean tmp_dir;
 	gboolean name;
 	gboolean url;
+	gboolean frequency;
 };
 
 static void
@@ -46,6 +50,8 @@ start_element (GMarkupParseContext *context,
 		data->name = TRUE;
 	else if (!g_strcmp0 (element_name, "url"))
 		data->url = TRUE;
+	else if (!g_strcmp0 (element_name, "frequency"))
+		data->frequency = TRUE;
 }
 
 static void
@@ -60,6 +66,8 @@ text (GMarkupParseContext *context,
 		data->config->save_dir = g_strdup (text);
 	else if (data->tmp_dir && !data->subscription)
 		data->config->tmp_dir = g_strdup (text);
+	else if (data->frequency && !data->subscription)
+		data->config->frequency = atoi (text);
 	else if (data->name && data->subscription)
 		((RiverSubscription *)data->config->subscriptions->data)->name = g_strdup (text);
 	else if (data->url && data->subscription)
@@ -85,6 +93,8 @@ end_element (GMarkupParseContext *context,
 		data->name = FALSE;
 	else if (!g_strcmp0 (element_name, "url"))
 		data->url = FALSE;
+	else if (!g_strcmp0 (element_name, "frequency"))
+		data->frequency = FALSE;
 }	
 
 static GMarkupParser parser = {

@@ -1,3 +1,8 @@
+2009-01-03  Robin Sonefors <ozamosi@flukkost.nu>
+
+	* Don't hardcode XMPP information
+	* Add frequency to configuration file
+
 2009-01-02  Robin Sonefors <ozamosi@flukkost.nu>
 
 	* First version
