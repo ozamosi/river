@@ -1,4 +1,5 @@
 #include "river-xmpp.h"
+#include <glib/gprintf.h>
 #include <loudmouth/loudmouth.h>
 
 static gchar *recipient;
@@ -18,6 +19,8 @@ auto_subscribe (LmMessageHandler *handler, LmConnection *connection,
 			g_print ("Error sending message to '%s'\n", sender);
 		}
 		lm_message_unref (reply);
+	} else {
+		g_print ("Received jabber message of type %i and subtype %i\n", lm_message_get_type (message), lm_message_get_sub_type (message));
 	}
 	return LM_HANDLER_RESULT_REMOVE_MESSAGE;
 }
@@ -25,6 +28,8 @@ auto_subscribe (LmMessageHandler *handler, LmConnection *connection,
 void
 river_xmpp_init (gchar *server, gchar *username, gchar *jid, gchar *password, gchar *recipient_, gboolean ssl, gint port)
 {
+	if (jid == NULL)
+		g_sprintf (jid, "%s@%s", username, server);
 	recipient = recipient_;
 	GError *error = NULL;
 	conn = lm_connection_new (server);
@@ -58,6 +63,8 @@ river_xmpp_init (gchar *server, gchar *username, gchar *jid, gchar *password, gc
 void
 river_xmpp_send (gchar *subject, gchar *message)
 {
+	if (!recipient)
+		return;
 	LmMessage *m = lm_message_new (recipient, LM_MESSAGE_TYPE_MESSAGE);
 	lm_message_node_add_child (m->node, "subject", subject);
 	lm_message_node_add_child (m->node, "body", message);

@@ -21,7 +21,7 @@ static gint port;
 
 static GOptionEntry entries[] = {
 	{"daemon", 'd', 0, G_OPTION_ARG_NONE, &daemonize, "Run as a daemon", NULL},
-	{"server", 's', 0, G_OPTION_ARG_STRING, &server, "Server to connect to", NULL},
+	{"server", 's', 0, G_OPTION_ARG_STRING, &server, "XMPP Server to connect to", NULL},
 	{"username", 'u', 0, G_OPTION_ARG_STRING, &username, "River's username", NULL},
 	{"jid", 'j', 0, G_OPTION_ARG_STRING, &jid, "River's JabberID (usually username@server)", NULL},
 	{"password", 'p', 0, G_OPTION_ARG_STRING, &password, "River's XMPP password", NULL},
@@ -114,6 +114,15 @@ main (int argc, char *argv[])
 		exit (1);
 	}
 	loop = g_main_loop_new (NULL, TRUE);
+
+	if (server == NULL)
+		g_error ("You didn't say what XMPP server you want to connect to");
+	if (username == NULL)
+		g_error ("You didn't say what XMPP username to connect as");
+	if (password == NULL)
+		g_error ("You didn't say what XMPP password to use");
+	if (!port)
+		port = 5222;
 
 	RiverConfig *config = river_load_config ();
 	river_xmpp_init (server, username, jid, password, recipient, ssl, port);
