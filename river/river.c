@@ -48,6 +48,9 @@ on_download_complete (SummerDownload *dl, gchar *save_path, gconstpointer user_d
 	gchar *message = g_strdup_printf ("Saved '%s' to '%s'", item->title, save_path);
 	river_xmpp_send ("Download complete", message);
 	g_free (message);
+	g_free (save_path);
+	summer_item_data_free (item);
+	g_object_unref (dl);
 }
 
 static void
