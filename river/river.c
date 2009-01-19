@@ -117,7 +117,7 @@ main (int argc, char *argv[])
 	}
 	loop = g_main_loop_new (NULL, TRUE);
 
-	if (!(((server == NULL) == (username == NULL)) == (password == NULL))) {
+	if (!((server == NULL) == (username == NULL) && (server == NULL) == (password == NULL))) {
 		g_print ("If you want to connect to a jabberserver, you need to at least use the options\n--server, --username and --password. If you don't want to connect to jabber,\ndon't use any of them.\n");
 		exit (1);
 	}
