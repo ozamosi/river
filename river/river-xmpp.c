@@ -80,6 +80,9 @@ river_xmpp_send (gchar *subject, gchar *message)
 void
 river_xmpp_destruct ()
 {
-	lm_connection_close (conn, NULL);
-	lm_connection_unref (conn);
+	if (conn != NULL) {
+		if (lm_connection_is_open (conn))
+			lm_connection_close (conn, NULL);
+		lm_connection_unref (conn);
+	}
 }

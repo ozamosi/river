@@ -119,17 +119,18 @@ main (int argc, char *argv[])
 	}
 	loop = g_main_loop_new (NULL, TRUE);
 
-	if (server == NULL)
-		g_error ("You didn't say what XMPP server you want to connect to");
-	if (username == NULL)
-		g_error ("You didn't say what XMPP username to connect as");
-	if (password == NULL)
-		g_error ("You didn't say what XMPP password to use");
+	if (!(((server == NULL) == (username == NULL)) == (password == NULL))) {
+		g_print ("If you want to connect to a jabberserver, you need to at least use the options\n--server, --username and --password. If you don't want to connect to jabber,\ndon't use any of them.\n");
+		exit (1);
+	}
+
 	if (!port)
 		port = 5222;
 
 	RiverConfig *config = river_load_config (config_path);
-	river_xmpp_init (server, username, jid, password, recipient, ssl, port);
+	if (server != NULL)
+		river_xmpp_init (server, username, jid, password, recipient, ssl, port);
+
 	if (config == NULL)
 		g_error ("Couldn't parse config file");
 	
