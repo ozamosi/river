@@ -63,6 +63,7 @@ river_xmpp_init (gchar *server, gchar *username, gchar *jid, gchar *password, gc
 void
 river_xmpp_send (gchar *subject, gchar *message)
 {
+	g_print ("Subject: %s Message: %s\n", subject, message);
 	if (!recipient)
 		return;
 	LmMessage *m = lm_message_new (recipient, LM_MESSAGE_TYPE_MESSAGE);

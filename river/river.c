@@ -44,7 +44,8 @@ signal_handler (int signum)
 static void
 on_download_complete (SummerDownload *dl, gchar *save_path, gconstpointer user_data)
 {
-	gchar *message = g_strdup_printf ("Saved to '%s'", save_path);
+	SummerItemData *item = (SummerItemData *)user_data;
+	gchar *message = g_strdup_printf ("Saved '%s' to '%s'", item->title, save_path);
 	river_xmpp_send ("Download complete", message);
 	g_free (message);
 }
@@ -88,13 +89,7 @@ on_new_entries (SummerFeed *feed, gconstpointer user_data)
 				NULL);
 		g_object_set (dl, "save-dir", save_dir, NULL);
 		g_free (save_dir);
-		gchar *subject = g_strdup_printf ("New download starting from %s", subscription->name);
-		gchar *message = g_strdup_printf ("%s: %s", 
-			subscription->name, item->title);
-		river_xmpp_send (subject, message);
-		g_free (message);
-		g_free (subject);
-		g_signal_connect (dl, "download-complete", G_CALLBACK (on_download_complete), NULL);
+		g_signal_connect (dl, "download-complete", G_CALLBACK (on_download_complete), item);
 		summer_download_start (dl);
 	}
 }
