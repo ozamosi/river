@@ -106,10 +106,14 @@ static GMarkupParser parser = {
 };
 
 RiverConfig*
-river_load_config ()
+river_load_config (const gchar *config_path)
 {
-	gchar *config_path = g_build_filename (
-		g_get_user_config_dir (), "river", "config.xml", NULL);
+	if (config_path == NULL) {
+		config_path = g_build_filename (
+			g_get_user_config_dir (), "river", "config.xml", NULL);
+	} else if (!g_path_is_absolute (config_path)) {
+		config_path = g_build_filename (g_get_current_dir (), config_path, NULL);
+	}
 	struct parse_context *data = g_slice_new0 (struct parse_context);
 	data->config = g_slice_new0 (RiverConfig);
 	GMarkupParseContext *context = g_markup_parse_context_new (

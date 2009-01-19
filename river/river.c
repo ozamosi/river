@@ -16,6 +16,7 @@ static gchar *username;
 static gchar *jid;
 static gchar *password;
 static gchar *recipient;
+static gchar *config_path;
 static gboolean ssl;
 static gint port;
 
@@ -28,6 +29,7 @@ static GOptionEntry entries[] = {
 	{"recipient", 'r', 0, G_OPTION_ARG_STRING, &recipient, "The recipient of any notifications", NULL},
 	{"ssl", 'l', 0, G_OPTION_ARG_NONE, &ssl, "Whether to use SSL when connecting", NULL},
 	{"port", 'o', 0, G_OPTION_ARG_INT, &port, "Port to connect to", NULL},
+	{"config", 'c', 0, G_OPTION_ARG_FILENAME, &config_path, "File to use as configuration file, if other than the default", NULL},
 	{NULL}};
 
 static void
@@ -124,7 +126,7 @@ main (int argc, char *argv[])
 	if (!port)
 		port = 5222;
 
-	RiverConfig *config = river_load_config ();
+	RiverConfig *config = river_load_config (config_path);
 	river_xmpp_init (server, username, jid, password, recipient, ssl, port);
 	if (config == NULL)
 		g_error ("Couldn't parse config file");

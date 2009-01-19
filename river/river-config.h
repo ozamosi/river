@@ -3,8 +3,7 @@
 typedef struct _RiverConfig RiverConfig;
 typedef struct _RiverSubscription RiverSubscription;
 
-RiverConfig* river_load_config (void);
-RiverConfig* river_save_config (void);
+RiverConfig* river_load_config (const gchar *config);
 
 struct _RiverConfig {
 	gint frequency;
