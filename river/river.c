@@ -17,6 +17,7 @@ static gchar *jid;
 static gchar *password;
 static gchar *recipient;
 static gchar *config_path;
+static gboolean no_cache;
 static gboolean ssl;
 static gint port;
 
@@ -30,6 +31,7 @@ static GOptionEntry entries[] = {
 	{"ssl", 'l', 0, G_OPTION_ARG_NONE, &ssl, "Whether to use SSL when connecting", NULL},
 	{"port", 'o', 0, G_OPTION_ARG_INT, &port, "Port to connect to", NULL},
 	{"config", 'c', 0, G_OPTION_ARG_FILENAME, &config_path, "File to use as configuration file, if other than the default", NULL},
+	{"no-cache", 0, 0, G_OPTION_ARG_NONE, &no_cache, "Disable the use of a cache file. The cache file prevents redownloads", NULL},
 	{NULL}};
 
 static void
@@ -130,14 +132,22 @@ main (int argc, char *argv[])
 	river_xmpp_init (server, username, jid, password, recipient, ssl, port);
 	if (config == NULL)
 		g_error ("Couldn't parse config file");
+	
+	if (!config->frequency)
+		config->frequency = 900;
+
 	summer_set ("download",
 		"save-dir", config->save_dir,
 		"tmp-dir", config->tmp_dir, NULL);
-	gchar *cache = g_build_filename (g_get_user_cache_dir (), "river", NULL);
-	summer_set ("feed",
-		"cache-dir", cache,
-		"frequency", 900, NULL);
-	g_free (cache);
+	if (!no_cache) {
+		gchar *cache = g_build_filename (
+			g_get_user_cache_dir (), 
+			"river", 
+			NULL);
+		summer_set ("feed", "cache-dir", cache, NULL);
+		g_free (cache);
+	}
+	summer_set ("feed", "frequency", config->frequency, NULL);
 	GList *subscriptions;
 	for (subscriptions = config->subscriptions; 
 			subscriptions != NULL;
