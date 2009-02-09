@@ -1,28 +1,14 @@
 include $(top_srcdir)/gtest.mk
 
-SUBDIRS = . tests
+nobase_pkgpython_PYTHON = \
+	river.py \
+	river_config.py \
+	river_xmpp.py
 
-INCLUDES = \
-	$(RIVER_CFLAGS) \
-	$(GLIB_CFLAGS) \
-	$(LIBSUMMER_CFLAGS) \
-	$(LOUDMOUTH_CFLAGS) \
-	$(WARN_CFLAGS) \
-	$(DISABLE_DEPRECATED) \
-	-include $(CONFIG_HEADER) \
-	-Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter
+clean-local:
+	rm -rf *.pyc *.pyo
 
-bin_PROGRAMS = river
+bin_SCRIPTS=river
 
-river_SOURCES = \
-	river.c \
-	river-config.c \
-	river-config.h \
-	river-xmpp.c \
-	river-xmpp.h
-	
-river_LDADD = \
-    $(RIVER_LIBS) \
-	$(GLIB_LIBS) \
-	$(LOUDMOUTH_LIBS) \
-	$(LIBSUMMER_LIBS)
+CLEANFILES = \
+    $(bin_SCRIPTS)
