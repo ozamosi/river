@@ -24,6 +24,7 @@ class Xmpp(object):
         print "Authenticated using %s" % auth
 
         self.client.sendInitPresence ()
+        self.client.RegisterDisconnectHandler (self.client.reconnectAndReauth)
 
     def send (self, subject, message):
         print "= %s =\n%s" % (subject, message)
@@ -32,8 +33,14 @@ class Xmpp(object):
         msg = xmpp.protocol.Message (to = self.recipient, body = message, subject = subject)
         self.client.send (msg)
 
+    loop_counter = 0
+    max_counter = 120
     def loop (self):
         self.client.Process (0)
+        self.loop_counter += 1
+        if self.loop_counter >= self.max_counter:
+            self.loop_counter = 0
+            self.client.sendPresence (requestRoster = 0)
 
 def xmpp_process (xmpp):
     xmpp.loop ()
