@@ -32,7 +32,10 @@ if options.no_cache:
     cache = None
 else:
     cache = config.get ('tmp_dir')
-summer.feed_set_default (cache_dir = cache, frequency = int (config.get ('frequency', 0)))
+summer.feed_set_default (cache_dir = cache, frequency = config.get ('frequency', 0))
+
+if config.get ('torrent_min_port') and config.get ('torrent_max_port'):
+    summer.torrent_set_default (min_port = config['torrent_min_port'], max_port = config['torrent_max_port'])
 
 def on_download_complete (dl, save_path, item):
     if xmpp:

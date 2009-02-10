@@ -7,6 +7,8 @@
 #  <save_dir>/home/username/mediafiles/</save_dir>
 #  <tmp_dir>/home/username/.cache/</tmp_dir>
 #  <frequency>900</frequency>
+#  <torrent_min_port>6881</torrent_min_port>
+#  <torrent_max_port>6889</torrent_max_port>
 #  <subscription>
 #   <name>Awesome feed</name>
 #   <url>http://awesome.com/feed</url>
@@ -32,7 +34,11 @@ class Config:
             elif element.tag == 'tmp_dir':
                 self.result['tmp_dir'] = element.text
             elif element.tag == 'frequency':
-                self.result['frequency'] = element.text
+                self.result['frequency'] = int (element.text)
+            elif element.tag == 'torrent_min_port':
+                self.result['torrent_min_port'] = int (element.text)
+            elif element.tag == 'torrent_max_port':
+                self.result['torrent_max_port'] = int (element.text)
             elif element.tag == 'subscription':
                 subscription = {}
                 for selement in element.getchildren ():
