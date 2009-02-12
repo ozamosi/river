@@ -30,17 +30,17 @@ class Xmpp(object):
         print "= %s =\n%s" % (subject, message)
         if not self.client.isConnected ():
             self.client.reconnectAndReauth ()
-        msg = xmpp.protocol.Message (to = self.recipient, body = message, subject = subject)
+        msg = xmpp.protocol.Message (to = self.recipient, body = message, subject = subject, typ = 'chat')
         self.client.send (msg)
 
     loop_counter = 0
-    max_counter = 120
+    max_counter = 60
     def loop (self):
-        self.client.Process (0)
+        self.client.Process (1)
         self.loop_counter += 1
         if self.loop_counter >= self.max_counter:
             self.loop_counter = 0
-            self.client.sendPresence (requestRoster = 0)
+            self.client.send (' ')
 
 def xmpp_process (xmpp):
     xmpp.loop ()
