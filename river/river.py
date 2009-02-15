@@ -50,10 +50,9 @@ def on_new_entries (feed, subscription):
             xmpp.send ('Downloading', "Downloading %s" % item.get_title ())
         else:
             print "Downloading %s" % item.get_title ()
-        dlable = item.get_downloadables ()
-        if not dlable:
+        dl = summer.create_download (item)
+        if not dl:
             continue
-        dl = summer.create_download (dlable[0].get_mime (), dlable[0].get_url ())
         if subscription.get ('save_dir'):
             save_dir = subscription.get ('save_dir')
         else:
