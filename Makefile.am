@@ -1,6 +1,9 @@
 SUBDIRS = \
 	river
 
+dist-hook:
+	python gen-changelog.py > ChangeLog
+
 EXTRA_DIST = \
 	intltool-extract.in \
 	intltool-update.in \
