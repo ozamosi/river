@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 import summer
-import glib
 import river_config
 import river_xmpp
 import sys
 import os.path
 from optparse import OptionParser
+try:
+    import glib
+except ImportError:
+    import gobject as glib
 
 parser = OptionParser ()
 parser.add_option ("-j", "--jid", dest = "jabber_id", help = "The Jabber ID to use for logging in")
