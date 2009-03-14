@@ -1,5 +1,3 @@
-include $(top_srcdir)/gtest.mk
-
 nobase_pkgpython_PYTHON = \
 	river.py \
 	river_config.py \

@@ -1,5 +1,4 @@
 SUBDIRS = \
-	po \
 	river
 
 EXTRA_DIST = \
