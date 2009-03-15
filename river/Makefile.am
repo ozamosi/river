@@ -1,7 +1,6 @@
 nobase_pkgpython_PYTHON = \
 	river.py \
-	river_config.py \
-	river_xmpp.py
+	river_config.py
 
 clean-local:
 	rm -rf *.pyc *.pyo
