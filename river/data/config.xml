@@ -1,0 +1,18 @@
+<river>
+ <save_dir>/home/you/path/to/river/save_dir/</save_dir>
+ <tmp_dir>/home/you/.cache/river/tmp/</tmp_dir>
+ <frequency>900</frequency>
+ <subscription>
+  <name>Subscription name</name>
+  <url>http://example.com/podcast.rss</url>
+ </subscription>
+ <plugins>
+   <plugin>
+     <name>print</name>
+     <config> 
+       <setting type="str" name="sample_setting" value="this is a setting" />
+     </config> <!-- other valid setting types are int and float -->
+   </plugin>
+ </plugins>
+</river>
+
