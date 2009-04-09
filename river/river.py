@@ -10,6 +10,9 @@ try:
 except ImportError:
     import gobject as glib
 
+import summer_util
+import river_plugins
+
 parser = OptionParser ()
 parser.add_option ("--no-cache", dest = "no_cache", help = "Disable the cache file, forcing River to download everything it sees", action = "store_true", default = False)
 parser.add_option ("-c", "--config", dest = "config", help = "Use a custom config file instead the default", default = None)
@@ -29,13 +32,20 @@ summer.feed_set_default (cache_dir = cache, frequency = config.get ('frequency',
 if config.get ('torrent_min_port') and config.get ('torrent_max_port'):
     summer.torrent_set_default (min_port = config['torrent_min_port'], max_port = config['torrent_max_port'])
 
-def on_download_complete (dl, save_path, item):
-        print 'Saved %s to %s' % (item.get_title (), save_path)
+plugins = river_plugins.Plugins(config['plugins'])
+
+def on_download_complete (dl, item):
+    plugins.download_complete (dl, summer_util.flatten_item (item))
+
+def on_download_started (dl, item):
+    plugins.download_started (dl, summer_util.flatten_item (item))
+
+def on_download_update (dl, downloaded, length, item):
+    plugins.download_update (dl, downloaded, length, summer_util.flatten_item (item))
 
 def on_new_entries (feed, subscription):
     items = feed.get_items ()
     for item in items:
-        print "Downloading %s" % item.get_title ()
         dl = summer.create_download (item)
         if not dl:
             continue
@@ -45,7 +55,11 @@ def on_new_entries (feed, subscription):
             save_dir = os.path.join (config.get ('save_dir'), subscription.get ('name'))
         dl.set_save_dir (save_dir)
         dl.connect ("download-complete", on_download_complete, item)
+        dl.connect ("download-started", on_download_started, item) 
+        dl.connect ("download-update", on_download_update, item)
         dl.start ()
+
+        plugins.new_entry (dl, summer_util.flatten_item (item))
 
 def main ():
     for subscription in config.get ('subscriptions', []):
@@ -58,7 +72,9 @@ def main ():
         loop.run ()
     finally:
         print "\nShutting down... Please wait."
+        plugins.shutdown ()
         summer.shutdown ()
+        print "Shutdown complete"
         return
 
 if __name__ == "__main__":
