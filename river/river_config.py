@@ -21,6 +21,10 @@ from xdg import BaseDirectory
 import os.path
 
 class Config:
+    type_map = { 'int':   int,
+                 'str':   str,
+                 'float': float }
+
     result = {}
     def __init__ (self, file = None):
         config = ElementTree.ElementTree ()
@@ -52,3 +56,23 @@ class Config:
                     self.result['subscriptions'] = [subscription]
                 else:
                     self.result['subscriptions'].append (subscription)
+            elif element.tag == 'plugins':
+                plugin = {}
+                for pselement in element.getchildren (): # <plugins>
+                    for pelement in pselement.getchildren (): # <plugin>
+                        if pelement.tag == 'name':
+                            plugin['name'] = pelement.text
+                        elif pelement.tag == 'config':
+                            pconfig = {}
+                            for celement in pelement.getchildren (): # <config>
+                                value = None
+                                if celement.get ('type'):
+                                    value = self.type_map[celement.get ('type')] (celement.get ('value'))
+                                else:
+                                    value = celement.get ('value')
+                                pconfig[celement.get ('name')] = value # <setting type="str|int|float" value="abc|123|1.23" />
+                            plugin['config'] = pconfig
+                    if not self.result.get ('plugins'):
+                        self.result['plugins'] = [plugin]
+                    else:
+                        self.result['plugins'].append (plugin)
