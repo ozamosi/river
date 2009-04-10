@@ -19,6 +19,8 @@ PKG_CHECK_MODULES(PYGOBJECT, pygobject-2.0 >= $PYGOBJECT_REQUIRED)
 
 AC_CONFIG_FILES([Makefile
 	river/Makefile
-	river/river])
+	river/river
+	plugins/Makefile
+	data/Makefile])
 
 AC_OUTPUT

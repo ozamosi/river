@@ -1,5 +1,7 @@
 SUBDIRS = \
-	river
+	river \
+	data \
+	plugins
 
 dist-hook:
 	python gen-changelog.py > ChangeLog
