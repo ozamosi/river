@@ -1,2 +1,3 @@
 pkgdata_DATA = \
-	print.py
+	print.py \
+	growl.py
