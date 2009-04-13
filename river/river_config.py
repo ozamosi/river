@@ -57,8 +57,8 @@ class Config:
                 else:
                     self.result['subscriptions'].append (subscription)
             elif element.tag == 'plugins':
-                plugin = {}
                 for pselement in element.getchildren (): # <plugins>
+                    plugin = {}
                     for pelement in pselement.getchildren (): # <plugin>
                         if pelement.tag == 'name':
                             plugin['name'] = pelement.text
