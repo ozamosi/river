@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ###
-### Start netgrowl
+### netgrowl
 ###
 """Growl 0.6 Network Protocol Client for Python"""
 __version__ = "0.6.1" # will always match Growl version
@@ -132,22 +132,9 @@ def download_started (pdata, dl, item):
     notify (pdata, "Download Started", 'Download Started', item['title'])
 
 def download_update (pdata, dl, downloaded, length, item):
-    if length >= 10485760: # only show if file is larger than 10M
-        percent = 100 * (float(downloaded)/length)
-
-        if percent >= 75 and pdata['update_notifs'][item['title']] < 3:
-            pdata['update_notifs'][item['title']] = 3
-        elif percent >= 50 and pdata['update_notifs'][item['title']] < 2:
-            pdata['update_notifs'][item['title']] = 2
-        elif percent >= 25 and pdata['update_notifs'][item['title']] < 1:
-            pdata['update_notifs'][item['title']] = 1
-        else:
-            return
-        notify (pdata, "Download Updated", 'Download progress: ' + str (pdata['update_notifs'][item['title']] * 25) + '% done', item['title'])
+    pass
 
 def init (pdata):
-    pdata['update_notifs'] = {}
-    
     pdata['app'] = 'river'
     pdata['addr'] = (pdata['config']['ip'], GROWL_UDP_PORT)
     pdata['socket'] = socket (AF_INET, SOCK_DGRAM)
