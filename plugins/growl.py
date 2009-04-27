@@ -124,11 +124,9 @@ def new_entry (pdata, dl, item): # not of interest for this plugin, but needs to
     pass
 
 def download_complete (pdata, dl, item):
-    pdata['update_notifs'].pop(item['title'])
     notify (pdata, "Download Complete", 'Download Complete', item['title'])
 
 def download_started (pdata, dl, item):
-    pdata['update_notifs'][item['title']] = 0
     notify (pdata, "Download Started", 'Download Started', item['title'])
 
 def download_update (pdata, dl, downloaded, length, item):
