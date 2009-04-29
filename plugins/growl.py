@@ -139,7 +139,6 @@ def init (pdata):
     p = GrowlRegistrationPacket (application=pdata['app'], password=pdata['config']['password'])
     p.addNotification ("Download Started", enabled=True)
     p.addNotification ("Download Complete", enabled=True)
-    p.addNotification ("Download Updated", enabled=True)
     pdata['socket'].sendto (p.payload (), pdata['addr'])
     print 'Loaded growl plugin'
 
