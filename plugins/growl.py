@@ -132,6 +132,9 @@ def download_started (pdata, dl, item):
 def download_update (pdata, dl, downloaded, length, item):
     pass
 
+def download_error (pdata, dl, error, item):
+    pass
+
 def init (pdata):
     pdata['app'] = 'river'
     pdata['addr'] = (pdata['config']['ip'], GROWL_UDP_PORT)

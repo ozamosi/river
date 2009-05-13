@@ -10,7 +10,6 @@ try:
 except ImportError:
     import gobject as glib
 
-import summer_util
 import river_plugins
 
 parser = OptionParser ()
@@ -35,13 +34,16 @@ if config.get ('torrent_min_port') and config.get ('torrent_max_port'):
 plugins = river_plugins.Plugins(config['plugins'])
 
 def on_download_complete (dl, item):
-    plugins.download_complete (dl, summer_util.flatten_item (item))
+    plugins.download_complete (dl, item)
 
 def on_download_started (dl, item):
-    plugins.download_started (dl, summer_util.flatten_item (item))
+    plugins.download_started (dl, item)
 
 def on_download_update (dl, downloaded, length, item):
-    plugins.download_update (dl, downloaded, length, summer_util.flatten_item (item))
+    plugins.download_update (dl, downloaded, length, item)
+
+def on_download_error (dl, error, item):
+    plugins.download_error (dl, error, item)
 
 def on_new_entries (feed, subscription):
     items = feed.get_items ()
@@ -57,9 +59,10 @@ def on_new_entries (feed, subscription):
         dl.connect ("download-complete", on_download_complete, item)
         dl.connect ("download-started", on_download_started, item) 
         dl.connect ("download-update", on_download_update, item)
+        dl.on_error (on_download_error, item)
         dl.start ()
 
-        plugins.new_entry (dl, summer_util.flatten_item (item))
+        plugins.new_entry (dl, item)
 
 def main ():
     for subscription in config.get ('subscriptions', []):

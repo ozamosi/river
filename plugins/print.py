@@ -13,6 +13,9 @@ def download_started (pdata, dl, item):
 def download_update (pdata, dl, downloaded, length, item):
     print 'Status update: %s. Downloaded: %s/%s' % (item['title'], str(downloaded), str(length))
 
+def download_error (pdata, dl, error, item):
+    print 'Error in %s: %s'% (item['title'], error.message)
+
 def init (pdata):
     print 'Loaded simple print plugin'
 

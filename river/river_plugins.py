@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+import gobject
 import imp
 import xdg.BaseDirectory as bd
 
@@ -27,6 +28,9 @@ class Plugins:
         for p in self.plugins.keys ():
             self.plugins[p]['download_update'] (self.plugins[p]['data'], dl, downloaded, length, item)
 
+    def download_error (self, dl, error, item):
+        for p in self.plugins.keys ():
+            self.plugins[p]['download_error'] (self.plugins[p]['data'], dl, error, item)
 
     def load_plugins (self, config):
         for p in config:
@@ -42,6 +46,7 @@ class Plugins:
             self.plugins[p['name']]['download_started'] =  m.download_started
             self.plugins[p['name']]['download_complete'] = m.download_complete
             self.plugins[p['name']]['download_update'] =   m.download_update
+            self.plugins[p['name']]['download_error'] =    m.download_error
             self.plugins[p['name']]['shutdown'] =          m.shutdown
 
             self.plugins[p['name']]['data'] = {'config': p['config']}
